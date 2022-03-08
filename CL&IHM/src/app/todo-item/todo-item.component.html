@@ -1,0 +1,18 @@
+
+<div class="view">
+  <input  class = "toggle"
+          type  = "checkbox"
+          name  = "done"
+          [ngModel] = "todoitem.isDone"
+  />
+  <label  class="texte">
+    {{todoitem.label}}
+  </label>
+  <button  class="destroy"></button>
+</div>
+<form>
+  <input  #newTextInput
+          name      = "newTextInput"
+          class     = "edit"
+  />
+</form>
