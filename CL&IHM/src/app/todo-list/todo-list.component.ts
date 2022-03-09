@@ -1,5 +1,5 @@
 import { TodoItem, TodoList, TodolistService } from './../todolist.service';
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef} from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodoListComponent implements OnInit {
-
+  filter='all';
   todoList: TodoList | any;
   readonly todoListObs = new Observable<TodoList>();
 
@@ -24,12 +24,24 @@ export class TodoListComponent implements OnInit {
     })
   }
 
-  update(data: Partial<TodoItem>, ...items: readonly TodoItem[]){
-    this.service.update(data, ...items);
+  update(data: Partial<TodoItem>, filter:string,...items: readonly TodoItem[]){
+    this.service.update(data, filter,...items);
+
   }
 
   delete(...items: readonly TodoItem[]): void{
     this.service.delete(...items);
   }
-
+  change_to_all():void{
+    this.filter='all';
+    console.log(this.filter);
+  }
+  change_to_activ():void{
+    this.filter='acitves';
+    console.log(this.filter);
+  }
+  change_to_else():void{
+    this.filter='pass';
+    console.log(this.filter);
+  }
 }

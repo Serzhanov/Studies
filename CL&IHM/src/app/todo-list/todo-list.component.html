@@ -17,8 +17,8 @@
     <ul class="todo-list">
       <li *ngFor="let item of todoList.items">
         <app-todo-item [todoitem]="item"
-        ></app-todo-item>
-
+        (remove)="delete($event)"
+        (update)="update($event,filter)"></app-todo-item>
       </li>
     </ul>
   </section>
@@ -26,13 +26,13 @@
     <span class="todo-count"><strong></strong> restantes</span>
     <ul class="filters">
       <li>
-        <a class="filterAll">Tous</a>
+        <a class="filterAll" routerLink="" (click)="change_to_all()">Tous</a>
       </li>
       <li>
-        <a class="filterActives">Actifs</a>
+        <a class="filterActives" routerLink="" (click)="change_to_activ()">Actifs</a>
       </li>
       <li>
-        <a class="filterCompleted">Complétés</a>
+        <a class="filterCompleted" routerLink="" (click)="change_to_else()">Complétés</a>
       </li>
     </ul>
     <button class="clear-completed">Supprimer cochées</button>

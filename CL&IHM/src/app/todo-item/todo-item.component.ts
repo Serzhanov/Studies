@@ -15,5 +15,11 @@ export class TodoItemComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  delete(){
+    this.remove.emit(this.todoitem);
+  }
+  update_this(){
+    this.update.emit(this.todoitem);
+  }
 
 }

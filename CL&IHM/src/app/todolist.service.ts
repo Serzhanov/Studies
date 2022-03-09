@@ -15,7 +15,6 @@ export interface TodoList {
 
 let idItem = 0;
 
-
 const saveListName='TODOLIST MIAGE';
 const defaultList={label: 'L3 MIAGE', items: [] };
 export class TodolistService {
@@ -36,6 +35,7 @@ export class TodolistService {
         ...L.items,
         ...labels.filter( l => l !== '').map(
             label => ({label, isDone: false, id: idItem++})
+
           )
       ]
     } );
@@ -52,17 +52,38 @@ export class TodolistService {
   }
 
 
-  update(data: Partial<TodoItem>, ...items: readonly TodoItem[]): this {
+  update(data: Partial<TodoItem>,filter:string, ...items: readonly TodoItem[]): this {
     if(data.label !== "") {
-      const L = this.subj.value;
-      this.subj.next( {
-        ...L,
-        items: L.items.map( item => items.indexOf(item) >= 0 ? {...item, ...data} : item )
-      } );
+      if (filter=='all'){
+        console.log('all_main');
+        const L = this.subj.value;
+        this.subj.next( {
+          ...L,
+          items: L.items.map( item => items.indexOf(item) >= 0 ? {...item, ...data} : item )
+        } );
+      }
+      else if(filter=='acitves'){
+        console.log('actives_all_main');
+        const L = this.subj.value;
+        this.subj.next( {
+          ...L,
+          items: L.items.map( item => items.indexOf(item) >= 0  && item.isDone==false ?  {...item, ...data} : item )
+        } );
+      }
+      else{
+        console.log('actives_pass_asd');
+        const L = this.subj.value;
+        this.subj.next( {
+          ...L,
+          items: L.items.map( item => items.indexOf(item) >= 0  && item.isDone==true ?  {...item, ...data} : item )
+        } );
+      }
     } else {
       this.delete(...items);
     }
     return this;
   }
 
-}
+  }
+
+

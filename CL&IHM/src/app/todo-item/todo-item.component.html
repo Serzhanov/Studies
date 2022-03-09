@@ -4,11 +4,13 @@
           type  = "checkbox"
           name  = "done"
           [ngModel] = "todoitem.isDone"
+          (change)="update_this()"
   />
   <label  class="texte">
-    {{todoitem.label}}
+    <div [ngClass]="todoitem.isDone==todoitem.isDone ? 'todo-list li label' :'todo-list li.completed label'">{{todoitem.label}}</div>
   </label>
-  <button  class="destroy"></button>
+  <button type="button" class="destroy" (click)="delete()">asddsa</button>
+
 </div>
 <form>
   <input  #newTextInput
