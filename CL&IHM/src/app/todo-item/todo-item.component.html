@@ -1,4 +1,3 @@
-
 <div class="view">
   <input  class = "toggle"
           type  = "checkbox"
@@ -6,15 +5,20 @@
           [ngModel] = "todoitem.isDone"
           (change)="update_this()"
   />
-  <label  class="texte">
-    <div [ngClass]="todoitem.isDone==todoitem.isDone ? 'todo-list li label' :'todo-list li.completed label'">{{todoitem.label}}</div>
+  <label  class="texte"
+    (dblclick)="isEditing=true"
+  >
+    <div [class.completed]="todoitem.isDone===true">{{todoitem.label}}</div>
+
   </label>
-  <button type="button" class="destroy" (click)="delete()">asddsa</button>
+  <button type="button" class="destroy" (click)="delete()"></button>
 
 </div>
-<form>
+<form (ngSubmit)="changeLabel(newTextInput.value)">
   <input  #newTextInput
           name      = "newTextInput"
           class     = "edit"
+          [ngModel]="todoitem.label"
+          (blur)="changeLabel(newTextInput.value)"
   />
 </form>

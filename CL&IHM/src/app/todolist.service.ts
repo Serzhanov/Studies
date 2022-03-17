@@ -18,13 +18,11 @@ let idItem = 0;
 const saveListName='TODOLIST MIAGE';
 const defaultList={label: 'L3 MIAGE', items: [] };
 export class TodolistService {
-
-  private subj = new BehaviorSubject<TodoList>({label: 'L3 MIAGE', items: [] });
+  public subj = new BehaviorSubject<TodoList>({label: 'L3 MIAGE', items: [] });
   readonly observable = this.subj.asObservable();
   // private subj=new BehaviorSubject<TodoList>(localStorage.getItem(saveListName) ? JSON.parse(localStorage.getItem(saveListName)!):defaultList);
   // readonly observable = this.subj.asObservable().pipe(tap(L => localStorage.setItem(saveListName,JSON.stringify(L))));
   constructor() {
-
   }
 
   create(...labels: readonly string[]): this {
@@ -39,6 +37,7 @@ export class TodolistService {
           )
       ]
     } );
+
     return this;
   }
 
@@ -52,32 +51,15 @@ export class TodolistService {
   }
 
 
-  update(data: Partial<TodoItem>,filter:string, ...items: readonly TodoItem[]): this {
+  update(data: Partial<TodoItem>, ...items: readonly TodoItem[]): this {
     if(data.label !== "") {
-      if (filter=='all'){
-        console.log('all_main');
         const L = this.subj.value;
         this.subj.next( {
           ...L,
           items: L.items.map( item => items.indexOf(item) >= 0 ? {...item, ...data} : item )
         } );
-      }
-      else if(filter=='acitves'){
-        console.log('actives_all_main');
-        const L = this.subj.value;
-        this.subj.next( {
-          ...L,
-          items: L.items.map( item => items.indexOf(item) >= 0  && item.isDone==false ?  {...item, ...data} : item )
-        } );
-      }
-      else{
-        console.log('actives_pass_asd');
-        const L = this.subj.value;
-        this.subj.next( {
-          ...L,
-          items: L.items.map( item => items.indexOf(item) >= 0  && item.isDone==true ?  {...item, ...data} : item )
-        } );
-      }
+
+
     } else {
       this.delete(...items);
     }
@@ -85,5 +67,3 @@ export class TodolistService {
   }
 
   }
-
-

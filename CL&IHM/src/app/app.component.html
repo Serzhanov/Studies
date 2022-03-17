@@ -2,22 +2,15 @@
 
 
 <app-todo-list></app-todo-list>
-
+<!--
 <form (submit) = service.create(label.value)>
 
   <input #label/>
 
 </form>
 
+-->
 
-
-    <ul>
-      <li *ngFor="let item of todoList.items">
-        <input type="checkbox" name="buttonState" [ngModel]="item.isDone" (ngModelChange)="update({isDone:$event},item)" />
-        <input type="text" [ngModel]="item.label" (ngModelChange)="update({label:$event},item)"/>
-        <button (click)="delete(item)">Delete</button>
-      </li>
-    </ul>
 
 
 

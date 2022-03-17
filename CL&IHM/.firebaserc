@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "l3-todolist": {
+      "hosting": {
+        "l3m-tpX-todolist-angular-y2022": [
+          "l3-todolist"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "l3-todolist"
+  }
+}

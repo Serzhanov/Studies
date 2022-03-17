@@ -15,15 +15,20 @@
     />
     <label for="toggleAll">Mark all as complete</label>
     <ul class="todo-list">
-      <li *ngFor="let item of todoList.items">
+      <li *ngFor="let item of toChange(todoList.items,filter)"
+        [class.editing]="todo.isEditing"
+      >
         <app-todo-item [todoitem]="item"
         (remove)="delete($event)"
-        (update)="update($event,filter)"></app-todo-item>
+        (update)="update($event)"
+          #todo
+        >
+      </app-todo-item>
       </li>
     </ul>
   </section>
   <footer class="footer">
-    <span class="todo-count"><strong></strong> restantes</span>
+    <span class="todo-count"><strong></strong>{{taille}} have to complete</span>
     <ul class="filters">
       <li>
         <a class="filterAll" routerLink="" (click)="change_to_all()">Tous</a>
@@ -35,6 +40,6 @@
         <a class="filterCompleted" routerLink="" (click)="change_to_else()">Complétés</a>
       </li>
     </ul>
-    <button class="clear-completed">Supprimer cochées</button>
+    <button class="clear-completed" (click)="delete_all(todoList.items)">Supprimer cochées</button>
   </footer>
 </section>

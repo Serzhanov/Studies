@@ -106,6 +106,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "l3m-tpX-todolist-angular-y2022:build:production",
+            "firebaseProject": "l3-todolist",
+            "firebaseHostingSite": "l3-todolist"
+          }
         }
       }
     }
