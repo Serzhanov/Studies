@@ -12,6 +12,7 @@ export class TodoListComponent implements OnInit {
   filter='all';
   todoList: TodoList | any;
   taille:number|undefined;
+  taggle=false;
   readonly todoListObs = new Observable<TodoList>();
 
   constructor(public service: TodolistService){
@@ -23,8 +24,8 @@ export class TodoListComponent implements OnInit {
     this.service.observable.subscribe(response =>{
       this.todoList = response;
       console.log(response);
-      this.taille=this.todoList.items.length
-
+      this.todoList.isCompleted=0;
+      this.verify(this.todoList)
     })
   }
 
@@ -32,6 +33,13 @@ export class TodoListComponent implements OnInit {
     this.service.update(data,...items);
 
   }
+  verify(list:TodoList){
+    list.items.forEach(item=>{
+      if(item.isDone==false)
+        list.isCompleted++;
+    })
+  }
+
 
   delete(...items: readonly TodoItem[]): void{
     this.service.delete(...items);
@@ -61,6 +69,20 @@ export class TodoListComponent implements OnInit {
   }
   delete_all(items:TodoItem[]){
     this.service.delete(...items.filter(el=>el.isDone==true));
+  }
+  updateAll(data: TodoList){
+    if (this.taggle==false){
+      data.items.forEach(item=>{
+        this.update({isDone:true},item)
+      })
+      this.taggle=true
+    }
+    else{
+      data.items.forEach(item=>{
+        this.update({isDone:false},item)
+      })
+      this.taggle=false
+    }
   }
 
 }

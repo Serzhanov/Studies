@@ -13,7 +13,7 @@
             type="checkbox"
             name="toggleAll"
     />
-    <label for="toggleAll">Mark all as complete</label>
+    <label for="toggleAll" [class.taggle-all]="todoList.isCompleted===todoList.items.length" (click)="updateAll(todoList)" >Mark all as complete</label>
     <ul class="todo-list">
       <li *ngFor="let item of toChange(todoList.items,filter)"
         [class.editing]="todo.isEditing"
@@ -28,7 +28,7 @@
     </ul>
   </section>
   <footer class="footer">
-    <span class="todo-count"><strong></strong>{{taille}} have to complete</span>
+    <span class="todo-count"><strong></strong>{{todoList.isCompleted}} have to complete</span>
     <ul class="filters">
       <li>
         <a class="filterAll" routerLink="" (click)="change_to_all()">Tous</a>
