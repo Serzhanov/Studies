@@ -1,9 +1,10 @@
 import { ServiceDataService } from './../service-data.service';
 import { TodoItem, TodoList, TodolistService } from './../todolist.service';
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { Observable } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 
 
 @Component({
@@ -17,15 +18,49 @@ export class TodoListComponent implements OnInit {
   todoList: TodoList | any;
   taille:number|undefined;
   taggle=false;
-
+  chck:boolean=false;
   photoUrl:string|undefined|null;
-  readonly todoListObs = new Observable<TodoList>();
+  nameProfil:string|undefined|null;
+  todoListObs = new Observable<TodoList>();
+  //todoItems= new Observable<TodoItem[]|undefined>();
+  //private fireListStocking: AngularFirestoreCollection<TodoList> | undefined;
+  constructor(public service: TodolistService,public auth : AngularFireAuth,private router:Router,public dataService:ServiceDataService,private afs: AngularFirestore){
+    const temp=this.getData()
+    if(temp){
+      this.photoUrl=temp[0];
+      this.nameProfil=temp[1];
+      console.log(this.nameProfil)
+    }
+    if(this.getDocumentFromCollection()==null){
+      this.todoListObs=this.service.observable;
+      this.todoListObs.subscribe(val=>this.createCollection(val))
+      console.log('nety')
+    }
+    else{
+      this.todoList=this.getDocumentFromCollection();
+    }
 
-  constructor(public service: TodolistService,public auth : AngularFireAuth,private router:Router,public dataService:ServiceDataService){
-    this.todoListObs =this.service.observable;
-    this.photoUrl=this.getData();
   }
-
+  createCollection(data: any){
+    return new Promise<any>((resolve, reject) => {
+       this.afs
+           .collection(""+this.nameProfil)
+           .add(data)
+           .then(
+               res => {console.log(resolve)},
+               err => reject(err)
+           )
+    }
+ )}
+ getDocumentFromCollection(){
+  if (this.afs.collection.length==0)
+    return this.afs
+              .doc(""+this.nameProfil).valueChanges()
+  return null;
+}
+  updateList(list:TodoList) {
+    this.afs?.doc(""+this.nameProfil).set(list);
+  }
   ngOnInit(): void {
     this.service.observable.subscribe(response =>{
       this.todoList = response;
@@ -35,7 +70,7 @@ export class TodoListComponent implements OnInit {
     })
   }
 
-  update(data: Partial<TodoItem>,...items: readonly TodoItem[]){
+  updating(data: Partial<TodoItem>,...items: readonly TodoItem[]){
     this.service.update(data,...items);
 
   }
@@ -74,7 +109,7 @@ export class TodoListComponent implements OnInit {
   }
   updateAll(data: TodoList){
     data.items.forEach(item=>{
-      this.update({isDone:!this.taggle},item)
+      this.updating({isDone:!this.taggle},item)
     })
     this.taggle=!this.taggle;
   }

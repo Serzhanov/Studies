@@ -1,5 +1,3 @@
-import { TodoListComponent } from './todo-list/todo-list.component';
-import { Injectable } from '@angular/core';
 import { BehaviorSubject ,tap} from 'rxjs';
 
 export interface TodoItem {
@@ -59,8 +57,6 @@ export class TodolistService {
           ...L,
           items: L.items.map( item => items.indexOf(item) >= 0 ? {...item, ...data} : item )
         } );
-
-
     } else {
       this.delete(...items);
     }

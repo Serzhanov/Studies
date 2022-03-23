@@ -5,6 +5,6 @@ import { Injectable } from '@angular/core';
 })
 @Injectable()
 export class ServiceDataService {
-  public serviceData:string | undefined;
+  public serviceData:string[]| undefined;
   constructor() { }
 }

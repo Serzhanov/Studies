@@ -24,7 +24,7 @@
       >
         <app-todo-item [todoitem]="item"
         (remove)="delete($event)"
-        (update)="update($event)"
+        (update)="updating($event)"
           #todo
         >
       </app-todo-item>
@@ -50,3 +50,4 @@
 </div>
 </section>
 <button class="clear-completed" (click)="this.logout()">Logout</button>
+<button class="clear-completed" (click)="updateList(todoList)">SaveList</button>
