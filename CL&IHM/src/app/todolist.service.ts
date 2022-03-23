@@ -19,10 +19,10 @@ let idItem = 0;
 const saveListName='TODOLIST MIAGE';
 const defaultList={label: 'L3 MIAGE', items: [] };
 export class TodolistService {
-  public subj = new BehaviorSubject<TodoList>({label: 'L3 MIAGE', items: [] ,isCompleted:0});
-  readonly observable = this.subj.asObservable();
-  // private subj=new BehaviorSubject<TodoList>(localStorage.getItem(saveListName) ? JSON.parse(localStorage.getItem(saveListName)!):defaultList);
-  // readonly observable = this.subj.asObservable().pipe(tap(L => localStorage.setItem(saveListName,JSON.stringify(L))));
+  //public subj = new BehaviorSubject<TodoList>({label: 'L3 MIAGE', items: [] ,isCompleted:0});
+  //readonly observable = this.subj.asObservable();
+   private subj=new BehaviorSubject<TodoList>(localStorage.getItem(saveListName) ? JSON.parse(localStorage.getItem(saveListName)!):defaultList);
+   readonly observable = this.subj.asObservable().pipe(tap(L => localStorage.setItem(saveListName,JSON.stringify(L))));
   constructor() {
   }
 

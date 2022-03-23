@@ -1,19 +1,9 @@
-<h1>TP TodoList</h1>
-<div *ngIf="auth.user | async as user; else showLogin">
-  <h1>Hello {{ user.displayName }}!</h1>
-  <button (click)="logout()">Logout</button>
-</div>
-<ng-template #showLogin>
-  <p>Please login.</p>
-  <button (click)="login()">Login with Google</button>
-  <div>
-
-  </div>
-
-</ng-template>
-<img [src]="photoUrl"/>
-<app-todo-list></app-todo-list>
+<h1>WELCOME TO TODOLIST</h1>
+<router-outlet ></router-outlet>
 <!--
+  <div *ngIf="this.userFoundComponent==true">
+  <app-todo-list></app-todo-list>
+<div>
 <form (submit) = service.create(label.value)>
 
   <input #label/>

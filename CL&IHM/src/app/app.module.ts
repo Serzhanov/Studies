@@ -8,19 +8,27 @@ import { TodoListComponent } from './todo-list/todo-list.component';
 import { TodoItemComponent } from './todo-item/todo-item.component';
 import { TodolistService } from './todolist.service';
 import { environment } from 'src/environments/environment';
+import { AuthenticationComponent } from './authentication/authentication.component';
+import { AppRoutingModule } from './app-routing.module';
+
+
+
 
 @NgModule({
   declarations: [
     AppComponent,
     TodoListComponent,
-    TodoItemComponent
+    TodoItemComponent,
+    AuthenticationComponent
+
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
     BrowserModule,
-    FormsModule
+    FormsModule,
+    AppRoutingModule
   ],
   providers: [TodolistService, { provide: AUTH_SETTINGS, useValue: { appVerificationDisabledForTesting: true } }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

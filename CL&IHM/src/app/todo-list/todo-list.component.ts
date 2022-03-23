@@ -1,6 +1,9 @@
 import { TodoItem, TodoList, TodolistService } from './../todolist.service';
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef} from '@angular/core';
 import { Observable } from 'rxjs';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-todo-list',
@@ -13,9 +16,11 @@ export class TodoListComponent implements OnInit {
   todoList: TodoList | any;
   taille:number|undefined;
   taggle=false;
+
+  photoUrl:string|undefined|null;
   readonly todoListObs = new Observable<TodoList>();
 
-  constructor(public service: TodolistService){
+  constructor(public service: TodolistService,public auth : AngularFireAuth,private router:Router){
     this.todoListObs =this.service.observable;
 
   }
@@ -44,45 +49,37 @@ export class TodoListComponent implements OnInit {
   delete(...items: readonly TodoItem[]): void{
     this.service.delete(...items);
   }
-  change_to_all():void{
-    this.filter='all';
-    console.log(this.filter);
+  change(val:string):void{
+    switch(val){
+      case 'all':
+        this.filter='all';
+        break;
+      case 'actives':
+        this.filter='actives';
+        break;
+      case 'pass':
+        this.filter='pass';
+        break;
+    }
   }
-  change_to_activ():void{
-    this.filter='actives';
-    console.log(this.filter);
-  }
-  change_to_else():void{
-    this.filter='pass';
-    console.log(this.filter);
-  }
+
   toChange(items:TodoItem[],filter:string){
-    if (filter==='pass'){
-      return items.filter(el=>el.isDone==true);
-    }
-    else if(filter==='actives'){
-      return items.filter(el=>el.isDone==false);
-    }
-    else{
-      return items;
-    }
+    if((filter==='pass') ||(filter==='actives'))
+      return items.filter(el=>el.isDone==(filter==='pass'));
+    return items;
   }
   delete_all(items:TodoItem[]){
     this.service.delete(...items.filter(el=>el.isDone==true));
   }
   updateAll(data: TodoList){
-    if (this.taggle==false){
-      data.items.forEach(item=>{
-        this.update({isDone:true},item)
-      })
-      this.taggle=true
-    }
-    else{
-      data.items.forEach(item=>{
-        this.update({isDone:false},item)
-      })
-      this.taggle=false
-    }
+    data.items.forEach(item=>{
+      this.update({isDone:!this.taggle},item)
+    })
+    this.taggle=!this.taggle;
+  }
+  logout() {
+    this.auth.signOut();
+    this.router.navigate(['/'])
   }
 
 }
