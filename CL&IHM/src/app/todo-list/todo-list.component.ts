@@ -1,3 +1,4 @@
+import { ServiceDataService } from './../service-data.service';
 import { TodoItem, TodoList, TodolistService } from './../todolist.service';
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef} from '@angular/core';
 import { Observable } from 'rxjs';
@@ -20,9 +21,9 @@ export class TodoListComponent implements OnInit {
   photoUrl:string|undefined|null;
   readonly todoListObs = new Observable<TodoList>();
 
-  constructor(public service: TodolistService,public auth : AngularFireAuth,private router:Router){
+  constructor(public service: TodolistService,public auth : AngularFireAuth,private router:Router,public dataService:ServiceDataService){
     this.todoListObs =this.service.observable;
-
+    this.photoUrl=this.getData();
   }
 
   ngOnInit(): void {
@@ -81,5 +82,12 @@ export class TodoListComponent implements OnInit {
     this.auth.signOut();
     this.router.navigate(['/'])
   }
-
+  getData(){
+    return this.dataService.serviceData;
+  }
+  setData(val:string){
+    this.dataService.serviceData;
+  }
 }
+
+

@@ -1,3 +1,4 @@
+import { ServiceDataService } from './../service-data.service';
 import { Route, Router } from '@angular/router';
 import { Component, OnInit, Output, EventEmitter, Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -19,7 +20,7 @@ export class AuthenticationComponent implements OnInit {
   photoUrl:string|undefined|null;
   nameUser:string|undefined|null;
   userFound:boolean=false;
-  constructor(public auth:AngularFireAuth,private router:Router) { }
+  constructor(public auth:AngularFireAuth,private router:Router,public dataService:ServiceDataService) { }
 
   ngOnInit(): void {
     this.auth.signOut();
@@ -35,7 +36,7 @@ export class AuthenticationComponent implements OnInit {
         console.log(profile?.photoURL)
         console.log(profile?.displayName)
         this.photoUrl=profile?.photoURL
-
+        this.setData(this.photoUrl);
         this.nameUser=profile?.displayName
         this.router.navigate(['/todo-list'])
 
@@ -47,6 +48,13 @@ export class AuthenticationComponent implements OnInit {
       console.log("Got error ,No user has been found :",error);
     })
   }
+  getData(){
+    return this.dataService.serviceData;
+  }
+  setData(val:any){
+    this.dataService.serviceData=val;
+  }
+
 
 
 
