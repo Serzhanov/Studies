@@ -1,10 +1,12 @@
 import { ServiceDataService } from './../service-data.service';
 import { TodoItem, TodoList, TodolistService } from './../todolist.service';
-import { Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy, ReflectiveInjector} from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
+
+
 
 
 @Component({
@@ -18,56 +20,45 @@ export class TodoListComponent implements OnInit {
   todoList: TodoList | any;
   taille:number|undefined;
   taggle=false;
-  chck:boolean=false;
   photoUrl:string|undefined|null;
   nameProfil:string|undefined|null;
-  todoListObs = new Observable<TodoList>();
-  //todoItems= new Observable<TodoItem[]|undefined>();
-  //private fireListStocking: AngularFirestoreCollection<TodoList> | undefined;
+  todoListObs = new Observable<TodoList>()
   constructor(public service: TodolistService,public auth : AngularFireAuth,private router:Router,public dataService:ServiceDataService,private afs: AngularFirestore){
     const temp=this.getData()
-    if(temp){
+    if(temp) {
       this.photoUrl=temp[0];
       this.nameProfil=temp[1];
-      console.log(this.nameProfil)
+      console.log("Mon rofil est ", this.nameProfil);
     }
-    if(this.getDocumentFromCollection()==null){
-      this.todoListObs=this.service.observable;
-      this.todoListObs.subscribe(val=>this.createCollection(val))
-      console.log('nety')
-    }
-    else{
-      this.todoList=this.getDocumentFromCollection();
+    this.todoListObs = this.afs.doc<TodoList>("users/"+this.nameProfil).valueChanges().pipe(
+      map( TDL => !!TDL ? TDL : {label: "L3 MIAGE", items: [], isCompleted: 0} )
+    );
+    this.afs.doc('users/'+this.nameProfil).ref.get().then((documentSnapshot) => {
+    if(!documentSnapshot.exists){
+      this.createCollection({label: "L3 MIAGE", items: [], isCompleted: 0})
+      }
+    })
+
+  }
+  async createCollection(data: any): Promise<DocumentReference<unknown> | void> {
+    console.log(`createCollection`, this.nameProfil, data);
+    if (this.nameProfil) {
+      return this.afs
+            .collection<TodoList>('users').doc(""+this.nameProfil).set(data)
     }
 
   }
-  createCollection(data: any){
-    return new Promise<any>((resolve, reject) => {
-       this.afs
-           .collection(""+this.nameProfil)
-           .add(data)
-           .then(
-               res => {console.log(resolve)},
-               err => reject(err)
-           )
-    }
- )}
- getDocumentFromCollection(){
-  if (this.afs.collection.length==0)
-    return this.afs
-              .doc(""+this.nameProfil).valueChanges()
-  return null;
-}
+
   updateList(list:TodoList) {
     this.afs?.doc(""+this.nameProfil).set(list);
   }
   ngOnInit(): void {
     this.service.observable.subscribe(response =>{
       this.todoList = response;
-      console.log(response);
       this.todoList.isCompleted=0;
       this.verify(this.todoList)
     })
+
   }
 
   updating(data: Partial<TodoItem>,...items: readonly TodoItem[]){
