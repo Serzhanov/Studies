@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+import { TodoList } from './todolist.service';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -6,5 +8,8 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class ServiceDataService {
   public serviceData:string[]| undefined;
-  constructor() { }
+  public serviceList :Observable<TodoList> | undefined;
+  constructor() {
+
+  }
 }

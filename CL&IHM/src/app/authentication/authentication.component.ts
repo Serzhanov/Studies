@@ -24,10 +24,11 @@ export class AuthenticationComponent implements OnInit {
     this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(
       ()=>{
         this.currentUser=firebase.auth().currentUser;
-        this.currentUser?.providerData.forEach(profile=>{
+        this.currentUser?.providerData.forEach(async profile=>{
         this.photoUrl=profile?.photoURL
         this.nameUser=profile?.displayName
-        this.setData([this.photoUrl,this.nameUser]);
+        await this.setData([this.photoUrl,this.nameUser]);
+        console.log('setted')
         this.router.navigate(['/todo-list'])
         }
           )
@@ -39,8 +40,8 @@ export class AuthenticationComponent implements OnInit {
   getData(){
     return this.dataService.serviceData;
   }
-  setData(val:any){
-    this.dataService.serviceData=val;
+  async setData(val:any){
+     this.dataService.serviceData=val;
   }
 
 

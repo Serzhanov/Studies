@@ -1,10 +1,13 @@
 import { ServiceDataService } from './../service-data.service';
 import { TodoItem, TodoList, TodolistService } from './../todolist.service';
 import { Component, OnInit, ChangeDetectionStrategy, ReflectiveInjector} from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
-import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { result } from 'cypress/types/lodash';
+import { ThisReceiver } from '@angular/compiler';
+
 
 
 
@@ -24,44 +27,24 @@ export class TodoListComponent implements OnInit {
   nameProfil:string|undefined|null;
   todoListObs = new Observable<TodoList>()
   constructor(public service: TodolistService,public auth : AngularFireAuth,private router:Router,public dataService:ServiceDataService,private afs: AngularFirestore){
-    const temp=this.getData()
-    if(temp) {
-      this.photoUrl=temp[0];
-      this.nameProfil=temp[1];
-      console.log("Mon rofil est ", this.nameProfil);
-    }
-    this.todoListObs = this.afs.doc<TodoList>("users/"+this.nameProfil).valueChanges().pipe(
-      map( TDL => !!TDL ? TDL : {label: "L3 MIAGE", items: [], isCompleted: 0} )
-    );
-    this.afs.doc('users/'+this.nameProfil).ref.get().then((documentSnapshot) => {
-    if(!documentSnapshot.exists){
-      this.createCollection({label: "L3 MIAGE", items: [], isCompleted: 0})
-      }
-    })
-
-  }
-  async createCollection(data: any): Promise<DocumentReference<unknown> | void> {
-    console.log(`createCollection`, this.nameProfil, data);
-    if (this.nameProfil) {
-      return this.afs
-            .collection<TodoList>('users').doc(""+this.nameProfil).set(data)
-    }
-
+    const temp=this.service.getData()
+    if(temp)
+      this.photoUrl=temp[0]
+    this.todoListObs=this.service.subj.asObservable()
   }
 
-  updateList(list:TodoList) {
-    this.afs?.doc(""+this.nameProfil).set(list);
-  }
   ngOnInit(): void {
-    this.service.observable.subscribe(response =>{
+    this.todoListObs.subscribe((response ) =>{
       this.todoList = response;
       this.todoList.isCompleted=0;
       this.verify(this.todoList)
+      console.log("ngOninit working",response)
     })
 
   }
 
   updating(data: Partial<TodoItem>,...items: readonly TodoItem[]){
+    console.log('idet update')
     this.service.update(data,...items);
 
   }
@@ -72,9 +55,10 @@ export class TodoListComponent implements OnInit {
     })
   }
 
-
   delete(...items: readonly TodoItem[]): void{
+    console.log("idet delete")
     this.service.delete(...items);
+
   }
   change(val:string):void{
     switch(val){
@@ -95,24 +79,37 @@ export class TodoListComponent implements OnInit {
       return items.filter(el=>el.isDone==(filter==='pass'));
     return items;
   }
+
   delete_all(items:TodoItem[]){
     this.service.delete(...items.filter(el=>el.isDone==true));
   }
+
   updateAll(data: TodoList){
     data.items.forEach(item=>{
       this.updating({isDone:!this.taggle},item)
     })
     this.taggle=!this.taggle;
   }
+
   logout() {
     this.auth.signOut();
     this.router.navigate(['/'])
   }
+
   getData(){
     return this.dataService.serviceData;
   }
-  setData(val:string){
-    this.dataService.serviceData;
+
+  setData(val:string[]){
+    this.dataService.serviceData=val;
+  }
+
+  sendList(s:Observable<TodoList>){
+    this.dataService.serviceList=s
+  }
+
+  updateList(list:TodoList) {
+    this.afs?.doc(""+this.nameProfil).set(list);
   }
 }
 

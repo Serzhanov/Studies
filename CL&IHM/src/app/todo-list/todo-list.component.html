@@ -2,7 +2,7 @@
   <h1>Hello {{ user.displayName }}!</h1>
   <img [src]="photoUrl"/>
 </div>
-<section class="todoapp" *ngIf="todoListObs | async as todo">
+<section class="todoapp" *ngIf=" todoListObs| async as todo">
   <header class="header">
     <h1>{{todo.label}}</h1>
     <form (submit) = service.create(lab.value)>
