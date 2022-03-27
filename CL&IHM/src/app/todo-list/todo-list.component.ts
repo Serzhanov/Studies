@@ -1,12 +1,11 @@
 import { ServiceDataService } from './../service-data.service';
 import { TodoItem, TodoList, TodolistService } from './../todolist.service';
-import { Component, OnInit, ChangeDetectionStrategy, ReflectiveInjector} from '@angular/core';
-import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef} from '@angular/core';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { result } from 'cypress/types/lodash';
-import { ThisReceiver } from '@angular/compiler';
+
 
 
 
@@ -26,11 +25,17 @@ export class TodoListComponent implements OnInit {
   photoUrl:string|undefined|null;
   nameProfil:string|undefined|null;
   todoListObs = new Observable<TodoList>()
+
   constructor(public service: TodolistService,public auth : AngularFireAuth,private router:Router,public dataService:ServiceDataService,private afs: AngularFirestore){
+
     const temp=this.service.getData()
-    if(temp)
+    this.service.initializing()
+    if(temp){
       this.photoUrl=temp[0]
-    this.todoListObs=this.service.subj.asObservable()
+      this.nameProfil=temp[1]
+    }
+      this.todoListObs=this.service.subj.asObservable()
+      console.log()
   }
 
   ngOnInit(): void {
@@ -108,8 +113,8 @@ export class TodoListComponent implements OnInit {
     this.dataService.serviceList=s
   }
 
-  updateList(list:TodoList) {
-    this.afs?.doc(""+this.nameProfil).set(list);
+  saveList(list:TodoList) {
+    this.afs.doc("users/"+this.nameProfil).set(list);
   }
 }
 

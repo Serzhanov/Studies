@@ -1,8 +1,9 @@
 import { ServiceDataService } from './../service-data.service';
 import { Route, Router } from '@angular/router';
-import { Component, OnInit, Output, EventEmitter, Injectable } from '@angular/core';
+import { Component, OnInit, Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
+
 @Injectable({
   providedIn:'root'
 })
@@ -18,13 +19,14 @@ export class AuthenticationComponent implements OnInit {
   nameUser:string|undefined|null;
   constructor(public auth:AngularFireAuth,private router:Router,public dataService:ServiceDataService) { }
   ngOnInit(): void {
+    console.log('daun')
     this.auth.signOut();
   }
   login() {
     this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(
       ()=>{
         this.currentUser=firebase.auth().currentUser;
-        this.currentUser?.providerData.forEach(async profile=>{
+        this.currentUser?.providerData.forEach( async profile=>{
         this.photoUrl=profile?.photoURL
         this.nameUser=profile?.displayName
         await this.setData([this.photoUrl,this.nameUser]);
@@ -37,7 +39,7 @@ export class AuthenticationComponent implements OnInit {
       console.log("Got error ,No user has been found :",error);
     })
   }
-  getData(){
+  async getData(){
     return this.dataService.serviceData;
   }
   async setData(val:any){

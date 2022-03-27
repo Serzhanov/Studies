@@ -9,6 +9,7 @@
       <input  name        = "newTodoInput"
               class       = "new-todo"
               placeholder = "Que faire?"
+              id = "labelInput"
               autofocus #lab/>
     </form>
   </header>
@@ -50,4 +51,4 @@
 </div>
 </section>
 <button class="clear-completed" (click)="this.logout()">Logout</button>
-<button class="clear-completed" (click)="updateList(todoList)">SaveList</button>
+<button class="clear-completed" (click)="saveList(todoList)">SaveList</button>

@@ -32,6 +32,9 @@ export class TodolistService {
    //private subj=new BehaviorSubject<TodoList>(localStorage.getItem(saveListName) ? JSON.parse(localStorage.getItem(saveListName)!):defaultList);
    //readonly observable = this.subj.asObservable().pipe(tap(L => localStorage.setItem(saveListName,JSON.stringify(L))));
   constructor(private afs: AngularFirestore,public service:ServiceDataService) {
+
+  }
+  initializing(){
     this.getCollection()
     this.observableTemp?.subscribe(async resultat=>{
         this.subj.next(resultat as TodoList)
@@ -47,11 +50,10 @@ export class TodolistService {
         ...L.items,
         ...labels.filter( l => l !== '').map(
             label => ({label, isDone: false, id: idItem++})
-
           )
       ]
     } );
-
+    (<HTMLInputElement>document.getElementById("labelInput")).value=""
     return this;
   }
 
@@ -85,20 +87,20 @@ export class TodolistService {
 
   async createCollection(data: any): Promise<DocumentReference<unknown> | void> {
     console.log(`createCollection`, this.nameProfil, data);
-    this.nameProfil='Nurbek Ss'
     if (this.nameProfil)
       return this.afs.collection<TodoList>('users').doc(""+this.nameProfil).set(data)
   }
 
 
-  getCollection(){
-    const temp=this.getData()
+   getCollection(){
+    const temp= this.getData()
     if(temp) {
       this.photoUrl=temp[0];
       this.nameProfil=temp[1];
+      console.log("getting here data",this.nameProfil)
     }
     this.observableTemp= this.afs.doc<TodoList>("users/"+this.nameProfil).valueChanges().pipe(
-      map( TDL => !!TDL ? TDL : {label: "L3 MIAGE", items: [], isCompleted: 0} )
+      map( TDL => !!TDL ? TDL : {label: "L3 MIAGE default", items: [], isCompleted: 0} )
     );
     this.afs.doc('users/'+this.nameProfil).ref.get().then((documentSnapshot) => {
       if(!documentSnapshot.exists)
