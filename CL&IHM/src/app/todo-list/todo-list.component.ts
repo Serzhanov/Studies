@@ -1,11 +1,11 @@
 import { ServiceDataService } from './../service-data.service';
 import { TodoItem, TodoList, TodolistService } from './../todolist.service';
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef} from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-
+import { defaultList } from './../todolist.service';
 
 
 
@@ -35,21 +35,18 @@ export class TodoListComponent implements OnInit {
       this.nameProfil=temp[1]
     }
       this.todoListObs=this.service.subj.asObservable()
-      console.log()
   }
 
   ngOnInit(): void {
-    this.todoListObs.subscribe((response ) =>{
+      this.todoListObs.subscribe((response ) =>{
       this.todoList = response;
       this.todoList.isCompleted=0;
       this.verify(this.todoList)
-      console.log("ngOninit working",response)
     })
 
   }
 
   updating(data: Partial<TodoItem>,...items: readonly TodoItem[]){
-    console.log('idet update')
     this.service.update(data,...items);
 
   }
@@ -61,7 +58,6 @@ export class TodoListComponent implements OnInit {
   }
 
   delete(...items: readonly TodoItem[]): void{
-    console.log("idet delete")
     this.service.delete(...items);
 
   }
@@ -98,6 +94,8 @@ export class TodoListComponent implements OnInit {
 
   logout() {
     this.auth.signOut();
+    this.service.subscription?.unsubscribe()
+    this.service.subj.next(defaultList)
     this.router.navigate(['/'])
   }
 

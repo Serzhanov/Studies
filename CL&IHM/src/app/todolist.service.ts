@@ -1,8 +1,9 @@
 import { ServiceDataService } from './service-data.service';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
-import { BehaviorSubject, map, tap, Observable, Subscribable } from 'rxjs';
+import { BehaviorSubject, map, tap, Observable, Subscribable, Subscription } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { flatMap } from 'cypress/types/lodash';
+import { last } from 'rxjs/operators';
+
 export interface TodoItem {
   readonly label: string;
   readonly isDone: boolean;
@@ -20,7 +21,7 @@ export interface TodoList {
 let idItem = 0;
 
 const saveListName='TODOLIST MIAGE';
-const defaultList={label: 'L3 MIAGE', items: [],isCompleted:0 };
+export const defaultList={label: 'L3 MIAGE', items: [],isCompleted:0 };
 @Injectable()
 export class TodolistService {
 
@@ -28,18 +29,24 @@ export class TodolistService {
   observableTemp:Observable<TodoList> | undefined
   photoUrl:string|undefined
   nameProfil:string|undefined
-
+  subscription:Subscription
+  //private subj=new BehaviorSubject<TodoList>(localStorage.getItem(saveListName) ? JSON.parse(localStorage.getItem(saveListName)!):defaultList);
+  //readonly observable = this.subj.asObservable().pipe(tap(L => localStorage.setItem(saveListName,JSON.stringify(L))));
+  | undefined
    //private subj=new BehaviorSubject<TodoList>(localStorage.getItem(saveListName) ? JSON.parse(localStorage.getItem(saveListName)!):defaultList);
    //readonly observable = this.subj.asObservable().pipe(tap(L => localStorage.setItem(saveListName,JSON.stringify(L))));
   constructor(private afs: AngularFirestore,public service:ServiceDataService) {
 
   }
-  initializing(){
+   initializing(){
     this.getCollection()
-    this.observableTemp?.subscribe(async resultat=>{
-        this.subj.next(resultat as TodoList)
-      }
-    )
+     this.subscription=this.observableTemp?.subscribe(resultat=>{
+         this.subj.next(resultat as TodoList)
+         console.log(resultat)
+         console.log("my name is ",this.nameProfil)
+       }
+     )
+
   }
 
   create(...labels: readonly string[]): this {
