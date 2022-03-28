@@ -2,7 +2,7 @@ import { ServiceDataService } from './service-data.service';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 import { BehaviorSubject, map, tap, Observable, Subscribable, Subscription } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { last } from 'rxjs/operators';
+
 
 export interface TodoItem {
   readonly label: string;
