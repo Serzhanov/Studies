@@ -5,7 +5,6 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 
-
 @Injectable({
   providedIn:'root'
 })
@@ -16,14 +15,18 @@ import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firest
   styleUrls: ['./authentication.component.scss']
 })
 export class AuthenticationComponent implements OnInit {
+
   currentUser:null | firebase.User | undefined;
   photoUrl:string|undefined|null;
   nameUser:string|undefined|null;
   @ViewChild(TodoListComponent) child:TodoListComponent | undefined;
+
   constructor(public afs: AngularFirestore,public auth:AngularFireAuth,public list:TodolistService) { }
+
   ngOnInit(): void {
     this.auth.signOut();
   }
+
   login() {
     this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(
       ()=>{
@@ -40,7 +43,6 @@ export class AuthenticationComponent implements OnInit {
   }
 
   setCollection(){
-
     this.afs.doc<TodoList>("users/"+this.nameUser).valueChanges().subscribe(data=>{
     (data && this.nameUser)?this.list.subj.next(data):this.list.subj.next(defaultList)
     })
@@ -56,7 +58,7 @@ export class AuthenticationComponent implements OnInit {
       return this.afs.collection<TodoList>('users').doc(""+this.nameUser).set(data)
   }
 
-  async logout() {
+   logout() {
     this.auth.signOut();
     this.nameUser=undefined
     this.photoUrl=undefined

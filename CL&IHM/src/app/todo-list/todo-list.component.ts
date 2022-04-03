@@ -2,12 +2,7 @@ import { TodoItem, TodoList, TodolistService } from './../todolist.service';
 import { Component, OnInit, ChangeDetectionStrategy,Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { DatePipe } from '@angular/common'
 import { DownloadFileService } from '../download-file.service';
-
-
-
-
 
 @Component({
   selector: 'app-todo-list',
@@ -20,29 +15,24 @@ export class TodoListComponent implements OnInit {
   todoList: TodoList | any;
   taille:number|undefined;
   taggle=false;
-
   @Input() nameProfil: string | undefined|null;
-
   todoListObs = new Observable<TodoList>()
-
   constructor(public service: TodolistService,private afs: AngularFirestore,public downloadServ:DownloadFileService){
     this.todoListObs=this.service.subj.asObservable()
   }
 
   ngOnInit(): void {
-
       this.todoListObs.subscribe((response ) =>{
       this.todoList = response;
       this.todoList.isCompleted=0;
       this.verify(this.todoList)
     })
-
   }
 
   updating(data: Partial<TodoItem>,...items: readonly TodoItem[]){
     this.service.update(data,...items);
-
   }
+
   verify(list:TodoList){
     list.items.forEach(item=>{
       if(item.isDone==false)
@@ -52,8 +42,8 @@ export class TodoListComponent implements OnInit {
 
   delete(...items: readonly TodoItem[]): void{
     this.service.delete(...items);
-
   }
+
   change(val:string):void{
     switch(val){
       case 'all':

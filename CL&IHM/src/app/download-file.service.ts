@@ -12,7 +12,7 @@ export class DownloadFileService {
 
   constructor(public httpClient :HttpClient,public datepipe: DatePipe) { }
 
-
+  //doesnt work
   downloadFILE(url:string){
     return this.httpClient.get(url)
   }
