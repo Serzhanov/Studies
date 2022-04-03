@@ -17,14 +17,15 @@
   <button type="button" class="destroy" (click)="delete()"></button>
   <div *ngIf="todoitem.isDone==false">
     <input class=""  type="file" (change)="onChange($event)">
+    <app-voice-rec
+    [interupt]="this.break"
+    (speech)="changeLabel($event)">
+  </app-voice-rec>
   </div>
   <div *ngIf="this.todoitem.linkForFile||undefined ">
     <a target="_blank" rel="noopener noreferrer" [href]=this.todoitem.linkForFile download="download">Download file</a>
   </div>
-  <app-voice-rec
-    [interupt]="this.break"
-    (speech)="changeLabel($event)">
-  </app-voice-rec>
+
 </div>
 <form #forma="ngForm" (ngSubmit)="changeLabel(newTextInput.value)">
   <input  #newTextInput
