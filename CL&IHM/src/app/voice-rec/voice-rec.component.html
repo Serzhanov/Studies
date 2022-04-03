@@ -1,0 +1,13 @@
+<div *ngIf="voiceActiveSectionDisabled">
+  <button type="button" (click)="startVoiceRecognition()">Record</button>
+</div>
+<div *ngIf="voiceActiveSectionListening">
+  <p>
+  <button (click)="closeVoiceRecognition()">Close</button>
+  <button (click)="startVoiceRecognition()">Restart</button>
+  Listening
+  </p>
+</div>
+<div *ngIf="voiceActiveSectionError">
+  <p>Error ,reuse it</p>
+</div>

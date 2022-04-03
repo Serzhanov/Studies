@@ -1,10 +1,7 @@
 import { DownloadFileService } from './../download-file.service';
 import { TodoItem } from './../todolist.service';
-import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, Output, Input, ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, Output, Input} from '@angular/core';
 import { Observable } from 'rxjs';
-import { resolve } from 'cypress/types/bluebird';
-
-
 
 @Component({
   selector: 'app-todo-item',
@@ -14,6 +11,7 @@ import { resolve } from 'cypress/types/bluebird';
 })
 
 export class TodoItemComponent implements OnInit {
+  break:boolean=false;
   @Input() todoitem:TodoItem | any;
   @Output() update =new EventEmitter<Partial<TodoItem>>();
   @Output() remove = new EventEmitter<TodoItem>();
@@ -24,27 +22,28 @@ export class TodoItemComponent implements OnInit {
   file: File | undefined ; // Variable to store file
   image:string | ArrayBuffer|null|undefined;
 
+  constructor(public download:DownloadFileService) {}
 
+  ngOnInit(): void {}
 
-  constructor(public download:DownloadFileService) {
-
-  }
-
-  ngOnInit(): void {
-  }
   delete(){
+    this.break=true;
     this.remove.emit(this.todoitem);
   }
+
   update_this(){
     this.todoitem.isDone=!this.todoitem.isDone
     this.update.emit(this.todoitem);
   }
+
   get isEditing():boolean{
     return this._isEditing;
   }
+
   set isEditing(e:boolean){
     this._isEditing=e;
   }
+
   changeLabel(label:string):void{
     this.todoitem.label=label
     this.update.emit(this.todoitem)
@@ -59,7 +58,6 @@ export class TodoItemComponent implements OnInit {
     if(file)
     // Store form name as "file" with file data
     formData.append("file", file, file.name);
-
     // Make http post request over api
     // with formData as req
     return this.download.httpClient.post(this.baseApiUrl, formData)
@@ -78,8 +76,8 @@ onChange(event:any) {
         await this.addDoc().then(
           (val)=>{this.todoitem.linkForFile=val
             this.update.emit(this.todoitem)
-          }
-        )
+          },
+          (err)=>console.log(err))
         //we cannot stroe the file type into firebase thats why I decided just to store the link of its file.
         //this.todoitem.f=this.file
       }
@@ -94,14 +92,12 @@ onChange(event:any) {
                 // Short link via api response
                 this.shortLink = event.link;
                 res(this.shortLink)
-            }
-            else{
+              }
+            else
               err("got a error")
-            }
-          }
-        );
-    })
-  }
+            });
+          })
+        }
 
   //Doesnt work
   //Api doesnt proceed CROSS PERMISSION "Access-Control-Allow-Headers"
@@ -114,8 +110,6 @@ onChange(event:any) {
         a.href=this.shortLink
         a.download='download'
         a.click()
-      }
-       )
+      })
   }
-
 }

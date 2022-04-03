@@ -1,3 +1,4 @@
+
 import { DownloadFileService } from './download-file.service';
 import {  HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -13,6 +14,7 @@ import { environment } from 'src/environments/environment';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DatePipe } from '@angular/common';
+import { VoiceRecComponent } from './voice-rec/voice-rec.component';
 
 
 
@@ -23,7 +25,8 @@ import { DatePipe } from '@angular/common';
     AppComponent,
     TodoListComponent,
     TodoItemComponent,
-    AuthenticationComponent
+    AuthenticationComponent,
+    VoiceRecComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
