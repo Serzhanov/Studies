@@ -1,9 +1,18 @@
 <div *ngIf="auth.user | async as user; else showLogin">
   <h1>Hello {{ user.displayName }}!</h1>
+  <img [src]="this.photoUrl"
+  />
 </div>
 <ng-template #showLogin>
   <p>Please login.</p>
   <button (click)="login()">Login with Google</button>
 </ng-template>
+<app-todo-list
+[nameProfil]="this.nameUser">
+</app-todo-list>
+<div *ngIf="this.nameUser!=undefined">
+<button class="clear-completed" (click)="this.logout()">Logout</button>
+</div>
+
 
 

@@ -223,7 +223,30 @@ body {
   color: #d9d9d9;
   text-decoration: line-through;
 }
+.todo-list li .add {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 50px;
+  bottom: 0;
+  width: 40px;
+  height: 40px;
+  margin: auto 0;
+  font-size: 15px;
+  color: #cc9a9a;
+  margin-bottom: 11px;
+  transition: color 0.2s ease-out;
+}
+.todo-list li .add:hover {
+  color: black;
+}
+.todo-list li .add:after {
+  content: 'Download';
+}
 
+.todo-list li:hover .add {
+  display: block;
+}
 .todo-list li .destroy {
   display: none;
   position: absolute;

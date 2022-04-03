@@ -1,13 +1,14 @@
-import { ServiceDataService } from './service-data.service';
-import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
-import { BehaviorSubject, map, tap, Observable, Subscribable, Subscription } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Injectable } from '@angular/core';
+
 
 
 export interface TodoItem {
   readonly label: string;
   readonly isDone: boolean;
   readonly id: number;
+  readonly linkForFile:string;
 }
 
 export interface TodoList {
@@ -21,31 +22,15 @@ export interface TodoList {
 let idItem = 0;
 
 const saveListName='TODOLIST MIAGE';
-export const defaultList={label: 'L3 MIAGE', items: [],isCompleted:0 };
+export const defaultList={label: 'Who are u?', items: [],isCompleted:0 };
 @Injectable()
 export class TodolistService {
 
   public subj =new BehaviorSubject<TodoList>(defaultList)
-  observableTemp:Observable<TodoList> | undefined
-  photoUrl:string|undefined
-  nameProfil:string|undefined
-  subscription:Subscription
-  //private subj=new BehaviorSubject<TodoList>(localStorage.getItem(saveListName) ? JSON.parse(localStorage.getItem(saveListName)!):defaultList);
-  //readonly observable = this.subj.asObservable().pipe(tap(L => localStorage.setItem(saveListName,JSON.stringify(L))));
-  | undefined
+
    //private subj=new BehaviorSubject<TodoList>(localStorage.getItem(saveListName) ? JSON.parse(localStorage.getItem(saveListName)!):defaultList);
    //readonly observable = this.subj.asObservable().pipe(tap(L => localStorage.setItem(saveListName,JSON.stringify(L))));
-  constructor(private afs: AngularFirestore,public service:ServiceDataService) {
-
-  }
-   initializing(){
-    this.getCollection()
-     this.subscription=this.observableTemp?.subscribe(resultat=>{
-         this.subj.next(resultat as TodoList)
-         console.log(resultat)
-         console.log("my name is ",this.nameProfil)
-       }
-     )
+  constructor(private afs: AngularFirestore) {
 
   }
 
@@ -56,11 +41,12 @@ export class TodolistService {
       items: [
         ...L.items,
         ...labels.filter( l => l !== '').map(
-            label => ({label, isDone: false, id: idItem++})
+            label => ({label, isDone: false, id: idItem++,linkForFile:''})
           )
       ]
     } );
     (<HTMLInputElement>document.getElementById("labelInput")).value=""
+    //console.log(L.items[0].linkForFile,"sadadda")
     return this;
   }
 
@@ -85,33 +71,5 @@ export class TodolistService {
       this.delete(...items);
     }
     return this;
-  }
-
-
-  getData(){
-    return this.service.serviceData}
-
-
-  async createCollection(data: any): Promise<DocumentReference<unknown> | void> {
-    console.log(`createCollection`, this.nameProfil, data);
-    if (this.nameProfil)
-      return this.afs.collection<TodoList>('users').doc(""+this.nameProfil).set(data)
-  }
-
-
-   getCollection(){
-    const temp= this.getData()
-    if(temp) {
-      this.photoUrl=temp[0];
-      this.nameProfil=temp[1];
-      console.log("getting here data",this.nameProfil)
-    }
-    this.observableTemp= this.afs.doc<TodoList>("users/"+this.nameProfil).valueChanges().pipe(
-      map( TDL => !!TDL ? TDL : {label: "L3 MIAGE default", items: [], isCompleted: 0} )
-    );
-    this.afs.doc('users/'+this.nameProfil).ref.get().then((documentSnapshot) => {
-      if(!documentSnapshot.exists)
-        this.createCollection({label: "L3 MIAGE", items: [], isCompleted: 0})
-      })
   }
 }

@@ -1,11 +1,9 @@
-import { ServiceDataService } from './../service-data.service';
 import { TodoItem, TodoList, TodolistService } from './../todolist.service';
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef} from '@angular/core';
-import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Router } from '@angular/router';
+import { Component, OnInit, ChangeDetectionStrategy,Input } from '@angular/core';
+import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { defaultList } from './../todolist.service';
+import { DatePipe } from '@angular/common'
+import { DownloadFileService } from '../download-file.service';
 
 
 
@@ -22,22 +20,17 @@ export class TodoListComponent implements OnInit {
   todoList: TodoList | any;
   taille:number|undefined;
   taggle=false;
-  photoUrl:string|undefined|null;
-  nameProfil:string|undefined|null;
+
+  @Input() nameProfil: string | undefined|null;
+
   todoListObs = new Observable<TodoList>()
 
-  constructor(public service: TodolistService,public auth : AngularFireAuth,private router:Router,public dataService:ServiceDataService,private afs: AngularFirestore){
-
-    const temp=this.service.getData()
-    this.service.initializing()
-    if(temp){
-      this.photoUrl=temp[0]
-      this.nameProfil=temp[1]
-    }
-      this.todoListObs=this.service.subj.asObservable()
+  constructor(public service: TodolistService,private afs: AngularFirestore,public downloadServ:DownloadFileService){
+    this.todoListObs=this.service.subj.asObservable()
   }
 
   ngOnInit(): void {
+
       this.todoListObs.subscribe((response ) =>{
       this.todoList = response;
       this.todoList.isCompleted=0;
@@ -92,28 +85,10 @@ export class TodoListComponent implements OnInit {
     this.taggle=!this.taggle;
   }
 
-  logout() {
-    this.auth.signOut();
-    this.service.subscription?.unsubscribe()
-    this.service.subj.next(defaultList)
-    this.router.navigate(['/'])
-  }
-
-  getData(){
-    return this.dataService.serviceData;
-  }
-
-  setData(val:string[]){
-    this.dataService.serviceData=val;
-  }
-
-  sendList(s:Observable<TodoList>){
-    this.dataService.serviceList=s
-  }
-
   saveList(list:TodoList) {
     this.afs.doc("users/"+this.nameProfil).set(list);
   }
+
 }
 
 

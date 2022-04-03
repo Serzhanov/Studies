@@ -8,13 +8,21 @@
   <label  class="texte"
     (dblclick)="isEditing=true"
   >
-    <div [class.completed]="todoitem.isDone===true">{{todoitem.label}}</div>
-
+    <div [class.completed]="todoitem.isDone===true">{{todoitem.label}}
+    </div>
+  <div *ngIf="this.image!=undefined">
+    <img [src]="this.image">
+  </div>
   </label>
   <button type="button" class="destroy" (click)="delete()"></button>
-
+  <div *ngIf="todoitem.isDone==false">
+    <input class=""  type="file" (change)="onChange($event)">
+  </div>
+  <div *ngIf="this.todoitem.linkForFile||undefined ">
+    <a target="_blank" rel="noopener noreferrer" [href]=this.todoitem.linkForFile download="download">Download file</a>
+  </div>
 </div>
-<form (ngSubmit)="changeLabel(newTextInput.value)">
+<form #forma="ngForm" (ngSubmit)="changeLabel(newTextInput.value)">
   <input  #newTextInput
           name      = "newTextInput"
           class     = "edit"

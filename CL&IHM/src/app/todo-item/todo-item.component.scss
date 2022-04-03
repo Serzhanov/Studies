@@ -2,3 +2,26 @@
   color: #d9d9d9;
   text-decoration: line-through;
 }
+
+img{
+  width: 270px;
+  height: 200px;
+}
+a:link, a:visited {
+  background-color: #f44336;
+  color: white;
+  padding: 7px 14px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 0.5em;
+}
+
+a:hover, a:active {
+  background-color: red;
+}
+.hidden{
+  display:none;
+}
+
+

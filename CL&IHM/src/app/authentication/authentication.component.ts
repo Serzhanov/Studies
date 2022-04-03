@@ -1,8 +1,10 @@
-import { ServiceDataService } from './../service-data.service';
-import { Route, Router } from '@angular/router';
-import { Component, OnInit, Injectable } from '@angular/core';
+import { TodoList, TodolistService, defaultList } from './../todolist.service';
+import { TodoListComponent } from './../todo-list/todo-list.component';
+import { Component, OnInit, Injectable, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
+import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
+
 
 @Injectable({
   providedIn:'root'
@@ -17,9 +19,9 @@ export class AuthenticationComponent implements OnInit {
   currentUser:null | firebase.User | undefined;
   photoUrl:string|undefined|null;
   nameUser:string|undefined|null;
-  constructor(public auth:AngularFireAuth,private router:Router,public dataService:ServiceDataService) { }
+  @ViewChild(TodoListComponent) child:TodoListComponent | undefined;
+  constructor(public afs: AngularFirestore,public auth:AngularFireAuth,public list:TodolistService) { }
   ngOnInit(): void {
-    console.log('daun')
     this.auth.signOut();
   }
   login() {
@@ -27,26 +29,36 @@ export class AuthenticationComponent implements OnInit {
       ()=>{
         this.currentUser=firebase.auth().currentUser;
         this.currentUser?.providerData.forEach( async profile=>{
-        this.photoUrl=profile?.photoURL
-        this.nameUser=profile?.displayName
-        await this.setData([this.photoUrl,this.nameUser]);
-        console.log('setted')
-        this.router.navigate(['/todo-list'])
-        }
-          )
-        }
+          this.photoUrl=profile?.photoURL
+          this.nameUser=profile?.displayName
+          this.setCollection()
+        })
+      }
     ).catch((error)=>{
       console.log("Got error ,No user has been found :",error);
     })
   }
-  async getData(){
-    return this.dataService.serviceData;
+
+  setCollection(){
+
+    this.afs.doc<TodoList>("users/"+this.nameUser).valueChanges().subscribe(data=>{
+    (data && this.nameUser)?this.list.subj.next(data):this.list.subj.next(defaultList)
+    })
+
+    this.afs.doc('users/'+this.nameUser).ref.get().then((documentSnapshot) => {
+      if(!documentSnapshot.exists)
+        this.createCollection({label: "L3 MIAGE", items: [], isCompleted: 0})
+      })
   }
-  async setData(val:any){
-     this.dataService.serviceData=val;
+
+  async createCollection(data: any): Promise<DocumentReference<unknown> | void> {
+    if (this.nameUser)
+      return this.afs.collection<TodoList>('users').doc(""+this.nameUser).set(data)
   }
 
-
-
-
+  async logout() {
+    this.auth.signOut();
+    this.nameUser=undefined
+    this.photoUrl=undefined
+  }
 }

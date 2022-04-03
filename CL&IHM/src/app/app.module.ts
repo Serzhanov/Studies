@@ -1,3 +1,5 @@
+import { DownloadFileService } from './download-file.service';
+import {  HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +12,8 @@ import { TodolistService } from './todolist.service';
 import { environment } from 'src/environments/environment';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { AppRoutingModule } from './app-routing.module';
+import { DatePipe } from '@angular/common';
+
 
 
 
@@ -20,15 +24,14 @@ import { AppRoutingModule } from './app-routing.module';
     TodoListComponent,
     TodoItemComponent,
     AuthenticationComponent
-
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
     BrowserModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,HttpClientModule
   ],
-  providers: [TodolistService, { provide: AUTH_SETTINGS, useValue: { appVerificationDisabledForTesting: true } }],
+  providers: [TodolistService, { provide: AUTH_SETTINGS, useValue: { appVerificationDisabledForTesting: true } },DownloadFileService,DatePipe],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
