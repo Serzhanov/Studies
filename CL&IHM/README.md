@@ -11,9 +11,9 @@ d'entree est l'anglais.
 
 En cas si ce fichier est une image ,alors l'image va etre apparaitre comme input au dessous du text.
 
-4)Lors que vous etes entree comme via google mail vous ne pouvez pas sauvegarder le ficher dans le firebase car le firebase ne support pas cet extension.
+4)Lors que vous etes entré comme via google mail vous ne pouvez pas sauvegarder le ficher dans le firebase car le firebase ne support pas cet extension.
 
-
+PS:J'utilise un Behavior Subject qui contient la liste par default (aucune donnée).Lors que je me connecte via google mail ,je fais le next de ce subject sur les donnees qui sont dans la FireBase.J'ai decidé de ne pas sauvegarder le changement toute suite dans firebase ,parce que comme ca on aura une possibilite de faire le store de donnes precedents.Lorsque je sauvegarde et deconencte de google mail je fais encore une fois subject.next de default list.Alors on ne sauvegarde pas la liste si vous etes pas connecté,
 
 
 
