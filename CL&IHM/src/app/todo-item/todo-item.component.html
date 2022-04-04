@@ -14,7 +14,7 @@
     <img [src]="this.image">
   </div>
   </label>
-  <button type="button" class="destroy" (click)="delete()"></button>
+  <button type="button" [ngClass]="todoitem.isDone? 'destroy' : 'undestroy' " (click)="delete()"></button>
   <div *ngIf="todoitem.isDone==false">
     <input class=""  type="file" (change)="onChange($event)">
     <app-voice-rec
