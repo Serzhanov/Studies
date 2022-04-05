@@ -14,7 +14,7 @@ export interface TodoItem {
 export interface TodoList {
   readonly label: string;
   readonly items: readonly TodoItem[];
-  isCompleted:number;
+
 }
 
 
@@ -28,8 +28,8 @@ export class TodolistService {
 
   public subj =new BehaviorSubject<TodoList>(defaultList)
 
-   //private subj=new BehaviorSubject<TodoList>(localStorage.getItem(saveListName) ? JSON.parse(localStorage.getItem(saveListName)!):defaultList);
-   //readonly observable = this.subj.asObservable().pipe(tap(L => localStorage.setItem(saveListName,JSON.stringify(L))));
+  //private subj=new BehaviorSubject<TodoList>(localStorage.getItem(saveListName) ? JSON.parse(localStorage.getItem(saveListName)!):defaultList);
+  //readonly observable = this.subj.asObservable().pipe(tap(L => localStorage.setItem(saveListName,JSON.stringify(L))));
   constructor(private afs: AngularFirestore) {
 
   }
@@ -46,7 +46,6 @@ export class TodolistService {
       ]
     } );
     (<HTMLInputElement>document.getElementById("labelInput")).value=""
-    //console.log(L.items[0].linkForFile,"sadadda")
     return this;
   }
 

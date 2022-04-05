@@ -21,9 +21,9 @@
     [interupt]="this.break"
     (speech)="changeLabel($event)">
   </app-voice-rec>
-  </div>
   <div *ngIf="this.todoitem.linkForFile||undefined ">
     <a target="_blank" rel="noopener noreferrer" [href]=this.todoitem.linkForFile download="download">Download file</a>
+  </div>
   </div>
 </div>
 <form #forma="ngForm" (ngSubmit)="changeLabel(newTextInput.value)">
