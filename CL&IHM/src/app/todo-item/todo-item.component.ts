@@ -62,7 +62,7 @@ export class TodoItemComponent implements OnInit {
     // with formData as req
     return this.download.httpClient.post(this.baseApiUrl, formData)
 }
-onChange(event:any) {
+async onChange(event:any) {
 
     // On file Select
   this.file = event.target.files[0];
@@ -71,17 +71,19 @@ onChange(event:any) {
       const reader = new FileReader();
       reader.readAsDataURL(this.file)
       console.log(reader)
-      reader.onload=async (event)=>{
+      reader.onload=async ()=>{
         this.image=reader.result
-        await this.addDoc().then(
-          (val)=>{this.todoitem.linkForFile=val
-            this.update.emit(this.todoitem)
-          },
-          (err)=>console.log(err))
         //we cannot stroe the file type into firebase thats why I decided just to store the link of its file.
         //this.todoitem.f=this.file
       }
   }
+  await this.addDoc().then(
+    (val)=>{
+      this.todoitem.linkForFile=val
+      this.update.emit(this.todoitem)
+    },
+    (err)=>console.log(err))
+
 }
   async addDoc(){
     // OnClick of button Upload

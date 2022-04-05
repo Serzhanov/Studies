@@ -21,7 +21,7 @@
     [interupt]="this.break"
     (speech)="changeLabel($event)">
   </app-voice-rec>
-  <div *ngIf="this.todoitem.linkForFile||undefined ">
+  <div *ngIf="this.todoitem.linkForFile">
     <a target="_blank" rel="noopener noreferrer" [href]=this.todoitem.linkForFile download="download">Download file</a>
   </div>
   </div>
