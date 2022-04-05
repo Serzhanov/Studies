@@ -1,3 +1,28 @@
+
+
+# La logique d'application pour le prof
+
+1)Vous pouvez entrez dans via google mail anfin d'avoir deux options comme  sauvegarder et telecharger la ToDoList.
+
+2)Vous ecrivez les taches sur input ou sinon vous pouvez tapez sur le button 'Record' qui va utiliser votre micro et changer le text selon votre speech.La langue 
+d'entree est l'anglais.
+
+3)Vous pouvez deposer un seul fichier .Ce fichier va etre sauvegardé dans file.io (le service gratuit).Vous pouvez le telecharger en tapant le button 'Download file' qui va vous verser vers le lien de telechargement PS:J'ai pas reussi de le telecharger directement car file.io API ne propose pas Access-Control-Allow-Headers .
+
+En cas si ce fichier est une image ,alors l'image va etre apparaitre comme input au dessous du text.
+
+4)Lors que vous etes entré comme via google mail vous ne pouvez pas sauvegarder le ficher dans le firebase car le firebase ne support pas cet extension.
+
+PS:J'utilise un Behavior Subject qui contient la liste par default (aucune donnée).Lors que je me connecte via google mail ,je fais le next de ce subject sur les donnees qui sont dans la FireBase.J'ai decidé de ne pas sauvegarder le changement toute suite dans firebase ,parce que comme ca on aura une possibilite de faire le store de donnes precedents.Lorsque je sauvegarde et deconencte de google mail je fais encore une fois subject.next de default list.Alors on ne sauvegarde pas la liste si vous etes pas connecté,
+
+
+
+
+
+
+
+
+
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-f059dc9a6f8d3a56e377f745f24479a46679e63a5d9fe6f495e02850cd0d8118.svg)](https://classroom.github.com/online_ide?assignment_repo_id=6990066&assignment_repo_type=AssignmentRepo)
 # L3mTpXTodolistAngularY2022
 
