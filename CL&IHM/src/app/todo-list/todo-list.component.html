@@ -31,7 +31,7 @@
   </section>
   <div class="underFooter" *ngIf='todoList.items.length>0'>
   <footer class="footer">
-    <span class="todo-count"><strong></strong>{{todoList.isCompleted}} have to complete</span>
+    <span class="todo-count"><strong></strong>{{this.areCompleted}} have to complete</span>
     <ul class="filters">
       <li>
         <a class="filterAll"  (click)="change('all')">Tous</a>

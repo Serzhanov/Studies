@@ -15,6 +15,7 @@ export class TodoListComponent implements OnInit {
   todoList: TodoList | any;
   taille:number|undefined;
   taggle=false;
+  areCompleted:number=0;
   @Input() nameProfil: string | undefined|null;
   todoListObs = new Observable<TodoList>()
   constructor(public service: TodolistService,private afs: AngularFirestore,public downloadServ:DownloadFileService){
@@ -24,7 +25,7 @@ export class TodoListComponent implements OnInit {
   ngOnInit(): void {
       this.todoListObs.subscribe((response ) =>{
       this.todoList = response;
-      this.todoList.isCompleted=0;
+      this.areCompleted=0;
       this.verify(this.todoList)
     })
   }
@@ -36,7 +37,7 @@ export class TodoListComponent implements OnInit {
   verify(list:TodoList){
     list.items.forEach(item=>{
       if(item.isDone==false)
-        list.isCompleted++;
+        this.areCompleted++;
     })
   }
 
