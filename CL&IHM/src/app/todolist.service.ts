@@ -21,7 +21,7 @@ export interface TodoList {
 let idItem = 0;
 
 const saveListName='TODOLIST MIAGE';
-export const defaultList={label: 'L3 MIAGE', items: [],isCompleted:0 };
+export const defaultList={label: 'Welcome future Fiverr client', items: [],isCompleted:0 };
 @Injectable()
 export class TodolistService {
 
